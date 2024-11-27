@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: monitoring
+      version: "58.x"
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    grafana:
+      enabled: false
+    prometheus:
+      prometheusSpec:
+        podMonitorNamespaceSelector:
+          matchLabels:
+            podmonitorscrape: "true"
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
