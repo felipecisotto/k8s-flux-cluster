@@ -5,3 +5,4 @@ resources:
   - prometeus.yaml
   - repositories.yaml
   - prometheus-kubelet-scrape.yaml
+  - loki
