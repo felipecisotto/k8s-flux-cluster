@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - container-registry
   - cert-manager
+  - monitoring
+  - namespaces
