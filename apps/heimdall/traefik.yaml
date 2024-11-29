@@ -6,6 +6,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
+    - web
   routes:
     - match: Host(`dashboard.felipecisotto.com.br`)
       kind: Rule
@@ -13,4 +14,4 @@ spec:
         - name: heimdall
           port: 80
   tls:
-    certResolver: cert-manager
+    secretName: certificates
