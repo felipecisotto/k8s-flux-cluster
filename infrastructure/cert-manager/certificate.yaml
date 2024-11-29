@@ -5,7 +5,9 @@ metadata:
   namespace: cert-manager
 spec:
   dnsNames:
+    - "felipecisotto.com.br"
     - "dashboard.felipecisotto.com.br"
+    - "status.felipecisotto.com.br"
   secretName: certificates
   issuerRef:
     name: letsencrypt-issuer
