@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: heimdall
+  namespace: apps
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: heimdall
+      version: "8.X"
+      sourceRef:
+        kind: HelmRepository
+        name: heimdall
+        namespace: apps
+  values: 
+    persistence:
+      enabled: true
+      type: persistentVolumeClaim
+      size: 500Mi
+      storageClass: local-path
+
