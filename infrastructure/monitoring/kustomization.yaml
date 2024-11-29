@@ -6,3 +6,4 @@ resources:
   - repositories.yaml
   - prometheus-kubelet-scrape.yaml
   - loki
+  - promtail
