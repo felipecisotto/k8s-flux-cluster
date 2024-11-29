@@ -15,8 +15,8 @@ spec:
         namespace: apps
   values: 
     persistence:
-      enabled: true
-      type: persistentVolumeClaim
-      size: 500Mi
-      storageClass: local-path
-
+      config:
+        enabled: true
+        type: pvc
+        accessMode: ReadWriteOnce
+        size: 500Mi
