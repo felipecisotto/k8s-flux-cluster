@@ -1,0 +1,29 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: reflector
+  namespace: flux-system
+spec:
+  releaseName: reflector
+  interval: 5m0s
+  chart:
+    spec:
+      chart: reflector
+      version: "7.1.X" 
+      sourceRef:
+        kind: HelmRepository
+        name: emberstack
+        namespace: flux-system
+  values:
+    reflector:
+      enabled: true
+      resources:
+        secrets:
+          enabled: true
+          allow: ["*"]
+        configmaps:
+          enabled: false 
+      targetNamespace: "*"
+      labelSelector:
+        matchLabels:
+          replicate: "true"
