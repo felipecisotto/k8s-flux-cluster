@@ -4,5 +4,6 @@ kind: Kustomization
 # Lista de recursos que devem ser gerenciados
 resources:
   - apps.yaml
+  - smart-review.yaml
 
 # Patches ou modificações opcionais (se necessário)

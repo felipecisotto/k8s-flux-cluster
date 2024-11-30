@@ -1,0 +1,17 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-review-backend-service
+  namespace: smart-review
+spec:
+  selector:
+    app: smart-review-backend
+  type: ClusterIP
+  ports:
+    - name: smart-review-backend-service
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+

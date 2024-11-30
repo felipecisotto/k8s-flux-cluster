@@ -1,0 +1,28 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend-ingress
+  namespace: smart-review
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`smart-review.felipecisotto.com.br`) && PathPrefix(`/backend`)
+      kind: Rule
+      middlewares:
+        - name: backend-path-rewrite 
+      services:
+        - name: smart-review-backend-service
+          port: 80
+  tls:
+    secretName: certificates
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: backend-path-rewrite
+  namespace: smart-review
+spec:
+  stripPrefix:
+    prefixes:
+      - "/backend"
