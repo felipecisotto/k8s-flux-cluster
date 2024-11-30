@@ -5,3 +5,4 @@ resources:
   - monitoring
   - namespaces
   - reflector
+  - sealed-secrets
