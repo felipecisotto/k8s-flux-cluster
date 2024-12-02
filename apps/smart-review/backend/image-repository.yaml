@@ -1,0 +1,46 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: smart-review-backend-ir
+  namespace: flux-system
+spec:
+  image: "registry.felipecisotto.com.br/smart-review-backend"
+  interval: 1m
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: smart-review-backend-li
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: smart-review-backend-ir
+  policy:
+    semver:
+      range: ">=1.0.0"
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: smart-review-backend-automation
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: k8s-flux-cluster
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: FluxCD
+        email: flux@example.com
+      messageTemplate: "Update image tag for {{ .ObjectMeta.Name }} to {{ .ImagePolicyResult.Tag }}"
+    push:
+      branch: main
+  update:
+    path: ./apps/smart-review/backend/deployment.yaml
+    strategy: Setters
+
