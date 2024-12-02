@@ -8,6 +8,7 @@ spec:
     - websecure
   routes:
     - match: Host(`smart-review.felipecisotto.com.br`) 
+      priority: 1
       kind: Rule
       services:
         - name: smart-review-shopify-app-service

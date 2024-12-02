@@ -8,6 +8,7 @@ spec:
     - websecure
   routes:
     - match: Host(`smart-review.felipecisotto.com.br`) && PathPrefix(`/backend`)
+      priority: 1000
       kind: Rule
       middlewares:
         - name: backend-path-rewrite 
