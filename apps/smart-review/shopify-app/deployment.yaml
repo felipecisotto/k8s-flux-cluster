@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-review-shopify-app
+  namespace: smart-review
+  labels:
+    app: smart-review-shopify-app
+spec:
+  selector:
+    matchLabels:
+      app: smart-review-shopify-app
+  template:
+    metadata:
+      labels:
+        app: smart-review-shopify-app
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name: smart-review-shopify-app
+        image: "ghcr.io/smart-review/smart-review-shopify-app:1.0.0"
+        # livenessProbe:
+        #   httpGet:
+        #     path: /ping
+        #     port: 3000
+        #   initialDelaySeconds: 5
+        #   timeoutSeconds: 5
+        #   successThreshold: 1
+        #   failureThreshold: 3
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   httpGet:
+        #     path: /ping
+        #     port: 3000
+        #   initialDelaySeconds: 5
+        #   timeoutSeconds: 2
+        #   successThreshold: 1
+        #   failureThreshold: 3
+        #   periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: smart-review-shopify-app-config-map
+        - secretRef:
+            name: shopify-app-secret
+      restartPolicy: Always

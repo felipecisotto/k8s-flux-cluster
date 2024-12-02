@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: shopify-app-ingress
+  namespace: smart-review
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`smart-review.felipecisotto.com.br`) 
+      kind: Rule
+      services:
+        - name: smart-review-shopify-app-service
+          port: 80
+  tls:
+    secretName: certificates
