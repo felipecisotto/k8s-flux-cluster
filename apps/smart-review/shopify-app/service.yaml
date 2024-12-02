@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-review-shopify-app-service
+  namespace: smart-review
+spec:
+  selector:
+    app: smart-review-shopify-app
+  type: ClusterIP
+  ports:
+  - name: smart-review-shopify-app-service
+    protocol: TCP
+    port: 80
+    targetPort: 3000

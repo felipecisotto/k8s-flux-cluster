@@ -1,0 +1,10 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-review-shopify-app-config-map
+  namespace: smart-review
+data:
+  PORT: "3000"
+  NODE_ENV: production
+---
