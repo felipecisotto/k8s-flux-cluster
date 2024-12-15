@@ -5,3 +5,4 @@ resources:
   - heimdall
   - uptime-kuma
   - smart-review
+  - home-assistant
