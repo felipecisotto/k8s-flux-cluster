@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n-ingress
+  namespace: apps
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`n8n.felipecisotto.com.br`)
+      kind: Rule
+      services:
+        - name: n8n-service
+          port: 5678
+  tls:
+    secretName: certificates
+

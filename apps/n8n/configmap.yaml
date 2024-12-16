@@ -1,0 +1,12 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n8n-configmap
+  namespace: apps
+data:
+  key: value
+  N8N_PROTOCOL: http
+  N8N_PORT: "5678"
+---
+
