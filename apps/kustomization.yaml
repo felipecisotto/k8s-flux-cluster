@@ -4,6 +4,6 @@ resources:
   - namespace
   - heimdall
   - uptime-kuma
-  - smart-review
+  # - smart-review
   - home-assistant
   # - n8n

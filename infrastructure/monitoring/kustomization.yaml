@@ -4,6 +4,6 @@ resources:
   - repositories.yaml
   - grafana.yaml
   - prometeus.yaml
-  # - prometheus-kubelet-scrape.yaml
+  - prometheus-kubelet-scrape.yaml
   - loki
   - promtail
