@@ -15,6 +15,6 @@ spec:
       version: "6.56.0"
   values:
     service:
-      type: NodePort
+      type: ClusterIP
     adminUser: admin
     adminPassword: admin
