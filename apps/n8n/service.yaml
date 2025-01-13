@@ -5,7 +5,7 @@ metadata:
   namespace: apps
 spec:
   selector:
-    app: n8n-service
+    service: n8n
   ports:
   - name: n8n
     port: 5678

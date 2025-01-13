@@ -6,4 +6,4 @@ resources:
   - uptime-kuma
   # - smart-review
   - home-assistant
-  # - n8n
+  - n8n
