@@ -8,5 +8,6 @@ data:
   key: value
   N8N_PROTOCOL: http
   N8N_PORT: "5678"
+  WEBHOOK_URL: "https://n8n.felipecisotto.com.br"
 ---
 
