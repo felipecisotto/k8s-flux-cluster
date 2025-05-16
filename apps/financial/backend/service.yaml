@@ -3,9 +3,11 @@ kind: Service
 metadata:
   name: financial-backend
   namespace: financial
+  labels:
+    app: financial-backend-service
 spec:
   selector:
-    app: financial-backend
+    app: financial-backend-deployment
   ports:
     - name: http
       protocol: TCP
