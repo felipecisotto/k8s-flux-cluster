@@ -14,4 +14,20 @@ spec:
           port: 80
   tls:
     secretName: certificates
-
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus-ingress
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`prometheus.felipecisotto.com.br`)
+      kind: Rule
+      services:
+        - name: prometheus-operated
+          port: 9090
+  tls:
+    secretName: certificates
