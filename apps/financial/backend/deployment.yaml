@@ -17,6 +17,9 @@ spec:
         image: ghcr.io/felipecisotto/financial-backend:latest
         ports:
         - containerPort: 8080
+          name: http
+        - containerPort: 9464
+          name: otel
         envFrom:
         - configMapRef:
             name: financial-backend-config

@@ -4,3 +4,4 @@ metadata:
   name: financial
   labels:
     name: financial
+    podmonitorscrape: "true"
