@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: financial-backend
+  name: financial-backend-deployment
   namespace: financial
 spec:
   selector:
     matchLabels:
-      app: financial-backend
+      app: financial-backend-deployment
   template:
     metadata:
       labels:
-        app: financial-backend
+        app: financial-backend-deployment
     spec:
       containers:
       - name: financial-backend
