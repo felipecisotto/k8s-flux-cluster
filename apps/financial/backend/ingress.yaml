@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: financial-backend
+  namespace: financial
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: api.felipecisotto.com.br
+    http:
+      paths:
+      - path: /financial(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: financial-backend
+            port:
+              number: 80

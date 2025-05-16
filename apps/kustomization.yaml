@@ -7,3 +7,4 @@ resources:
   # - smart-review
   - home-assistant
   - n8n
+  - financial
