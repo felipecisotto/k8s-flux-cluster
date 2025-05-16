@@ -1,19 +1,30 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: financial-backend
   namespace: financial
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  rules:
-  - host: api.felipecisotto.com.br
-    http:
-      paths:
-      - path: /financial(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: financial-backend
-            port:
-              number: 80
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.felipecisotto.com.br`) && PathPrefix(`/financial`)
+      priority: 1000
+      kind: Rule
+      middlewares:
+        - name: financial-path-rewrite
+      services:
+        - name: financial-backend
+          port: 80
+  tls:
+    secretName: certificates
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: financial-path-rewrite
+  namespace: financial
+spec:
+  stripPrefix:
+    prefixes:
+      - "/financial"
+    forceSlash: false
