@@ -32,3 +32,10 @@ spec:
         serviceMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
+    kube-state-metrics:
+      enabled: true
+      metricLabelsAllowlist:
+        - nodes=[*]
+        - pods=[*]
+        - services=[*]
+        - namespaces=[*]
