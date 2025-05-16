@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: financial-backend-otel
+  namespace: monitoring
+  labels:
+    release: prometheus
+    podmonitorscrape: "true"
+    app: financial-backend
+spec:
+  selector:
+    matchLabels:
+      app: financial-backend
+  namespaceSelector:
+    matchNames:
+      - financial
+  endpoints:
+    - port: otel
+      interval: 15s
+      path: /metrics
+      scrapeTimeout: 10s

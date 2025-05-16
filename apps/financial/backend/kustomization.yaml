@@ -10,6 +10,7 @@ resources:
   - image-repository.yaml
   - image-update-automation.yaml
   - hpa.yaml
+  - service-monitor.yaml
 
 images:
   - name: ghcr.io/felipecisotto/financial-backend

@@ -25,7 +25,10 @@ spec:
         podMonitorNamespaceSelector:
           matchLabels:
             podmonitorscrape: "true"
+        serviceMonitorNamespaceSelector:
+          matchLabels:
+            podmonitorscrape: "true"
         podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false

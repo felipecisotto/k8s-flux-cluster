@@ -7,6 +7,11 @@ spec:
   selector:
     app: financial-backend
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 8080
+    - name: otel
+      protocol: TCP
+      port: 9464
+      targetPort: 9464
