@@ -13,3 +13,5 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - json/financial-backend-golden-signals.json
+      - json/logs.json
+      - json/k8s.json
