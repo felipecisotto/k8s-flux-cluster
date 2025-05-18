@@ -32,7 +32,7 @@
       },
       "id": 12,
       "panels": [],
-      "title": "Golden Signals - Financial Backend",
+      "title": "Golden Signals - ${job}",
       "type": "row"
     },
     {
@@ -123,7 +123,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"financial-backend\"}[$__rate_interval])) by (http_route, le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"${job}\"}[$__rate_interval])) by (http_route, le))",
           "instant": false,
           "legendFormat": "p95 - {{http_route}}",
           "range": true,
@@ -135,7 +135,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "histogram_quantile(0.50, sum(rate(http_server_duration_milliseconds_bucket{job=\"financial-backend\"}[$__rate_interval])) by (http_route, le))",
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_duration_milliseconds_bucket{job=\"${job}\"}[$__rate_interval])) by (http_route, le))",
           "hide": false,
           "instant": false,
           "legendFormat": "p50 - {{http_route}}",
@@ -233,7 +233,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "instant": false,
           "legendFormat": "{{http_route}}",
           "range": true,
@@ -330,7 +330,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\", http_status_code=~\"5..\"}[$__rate_interval])) by (http_route) / sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\", http_status_code=~\"5..\"}[$__rate_interval])) by (http_route) / sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "instant": false,
           "legendFormat": "{{http_route}}",
           "range": true,
@@ -427,7 +427,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_request_size_bytes_total{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_request_size_bytes_total{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "instant": false,
           "legendFormat": "Request {{http_route}}",
           "range": true,
@@ -439,7 +439,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_response_size_bytes_total{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_response_size_bytes_total{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "hide": false,
           "instant": false,
           "legendFormat": "Response {{http_route}}",
@@ -511,7 +511,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"financial-backend\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"${job}\"}[$__rate_interval])))",
           "instant": false,
           "legendFormat": "p95",
           "range": true,
@@ -578,7 +578,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval]))",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -649,7 +649,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\", http_status_code=~\"5..\"}[$__rate_interval])) / sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval]))",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\", http_status_code=~\"5..\"}[$__rate_interval])) / sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -721,7 +721,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(increase(http_server_duration_milliseconds_count{job=\"financial-backend\"}[1h])) by (http_route)",
+          "expr": "sum(increase(http_server_duration_milliseconds_count{job=\"${job}\"}[1h])) by (http_route)",
           "instant": false,
           "legendFormat": "{{http_route}}",
           "range": true,
@@ -793,7 +793,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(increase(http_server_duration_milliseconds_count{job=\"financial-backend\"}[1h])) by (http_status_code)",
+          "expr": "sum(increase(http_server_duration_milliseconds_count{job=\"${job}\"}[1h])) by (http_status_code)",
           "instant": false,
           "legendFormat": "HTTP {{http_status_code}}",
           "range": true,
@@ -955,7 +955,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"financial-backend\"}[$__rate_interval])) by (http_route, le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"${job}\"}[$__rate_interval])) by (http_route, le))",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -969,7 +969,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -984,7 +984,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\", http_status_code=~\"5..\"}[$__rate_interval])) by (http_route) / sum(rate(http_server_duration_milliseconds_count{job=\"financial-backend\"}[$__rate_interval])) by (http_route)",
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"${job}\", http_status_code=~\"5..\"}[$__rate_interval])) by (http_route) / sum(rate(http_server_duration_milliseconds_count{job=\"${job}\"}[$__rate_interval])) by (http_route)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1049,6 +1049,33 @@
         "regex": "",
         "skipUrlSync": false,
         "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "financial-backend",
+          "value": "financial-backend"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(http_server_duration_milliseconds_count, job)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Job",
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": {
+          "query": "label_values(http_server_duration_milliseconds_count, job)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
       }
     ]
   },
@@ -1058,7 +1085,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Financial Backend - 4 Golden Signals",
+  "title": "OpenTelemetry - 4 Golden Signals",
   "uid": "financial-backend-golden-signals",
   "version": 1,
   "weekStart": ""

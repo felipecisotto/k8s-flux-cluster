@@ -12,60 +12,60 @@ spec:
     rules:
     # Alerta para latência elevada
     - alert: HTTPLatencyHigh
-      expr: histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (job, service, route, le)) > 500
+      expr: histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (job, http_route, le)) > 500
       for: 5m
       labels:
         severity: warning
       annotations:
         summary: "Alta latência HTTP detectada"
-        description: "A latência p95 para o serviço {{ $labels.service }} ({{ $labels.job }}) na rota {{ $labels.route }} está acima de 500ms nos últimos 5 minutos."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?orgId=1&refresh=5s"
+        description: "A latência p95 para o serviço {{ $labels.job }} na rota {{ $labels.http_route }} está acima de 500ms nos últimos 5 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?var-job={{ $labels.job }}&orgId=1&refresh=5s"
 
     # Alerta para latência muito elevada (crítica)
     - alert: HTTPLatencyCritical
-      expr: histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (job, service, route, le)) > 1000
+      expr: histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket[5m])) by (job, http_route, le)) > 1000
       for: 2m
       labels:
         severity: critical
       annotations:
         summary: "Latência HTTP crítica detectada"
-        description: "A latência p95 para o serviço {{ $labels.service }} ({{ $labels.job }}) na rota {{ $labels.route }} está acima de 1000ms nos últimos 2 minutos."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?orgId=1&refresh=5s"
+        description: "A latência p95 para o serviço {{ $labels.job }} na rota {{ $labels.http_route }} está acima de 1000ms nos últimos 2 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?var-job={{ $labels.job }}&orgId=1&refresh=5s"
 
     # Alerta para taxa de erros HTTP
     - alert: HTTPErrorRateHigh
-      expr: sum(rate(http_server_duration_count{status_code=~"5.."}[5m])) by (job, service, route) / sum(rate(http_server_duration_count[5m])) by (job, service, route) > 0.05
+      expr: sum(rate(http_server_duration_milliseconds_count{http_status_code=~"5.."}[5m])) by (job, http_route) / sum(rate(http_server_duration_milliseconds_count[5m])) by (job, http_route) > 0.05
       for: 2m
       labels:
         severity: warning
       annotations:
         summary: "Alta taxa de erros HTTP detectada"
-        description: "A taxa de erros HTTP 5XX para o serviço {{ $labels.service }} ({{ $labels.job }}) na rota {{ $labels.route }} está acima de 5% nos últimos 2 minutos."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?orgId=1&refresh=5s"
+        description: "A taxa de erros HTTP 5XX para o serviço {{ $labels.job }} na rota {{ $labels.http_route }} está acima de 5% nos últimos 2 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?var-job={{ $labels.job }}&orgId=1&refresh=5s"
 
     # Alerta para taxa de erros HTTP crítica
     - alert: HTTPErrorRateCritical
-      expr: sum(rate(http_server_duration_count{status_code=~"5.."}[5m])) by (job, service, route) / sum(rate(http_server_duration_count[5m])) by (job, service, route) > 0.10
+      expr: sum(rate(http_server_duration_milliseconds_count{http_status_code=~"5.."}[5m])) by (job, http_route) / sum(rate(http_server_duration_milliseconds_count[5m])) by (job, http_route) > 0.10
       for: 1m
       labels:
         severity: critical
       annotations:
         summary: "Taxa de erros HTTP crítica detectada"
-        description: "A taxa de erros HTTP 5XX para o serviço {{ $labels.service }} ({{ $labels.job }}) na rota {{ $labels.route }} está acima de 10% no último minuto."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?orgId=1&refresh=5s"
+        description: "A taxa de erros HTTP 5XX para o serviço {{ $labels.job }} na rota {{ $labels.http_route }} está acima de 10% no último minuto."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?var-job={{ $labels.job }}&orgId=1&refresh=5s"
 
   - name: app.rules
     rules:
     # Alerta para aumento de requisições
     - alert: HighRequestRate
-      expr: sum(rate(http_server_duration_count[2m])) by (job, service) > 100
+      expr: sum(rate(http_server_duration_milliseconds_count[2m])) by (job, http_route) > 100
       for: 5m
       labels:
         severity: warning
       annotations:
         summary: "Alta taxa de requisições"
-        description: "O serviço {{ $labels.service }} ({{ $labels.job }}) está recebendo mais de 100 requisições por segundo nos últimos 5 minutos."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?orgId=1&refresh=5s"
+        description: "O serviço {{ $labels.job }} na rota {{ $labels.http_route }} está recebendo mais de 100 requisições por segundo nos últimos 5 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/financial-backend-golden-signals/financial-backend-4-golden-signals?var-job={{ $labels.job }}&orgId=1&refresh=5s"
 
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -82,101 +82,101 @@ spec:
     rules:
     # Alerta para uso elevado de CPU no host Proxmox
     - alert: ProxmoxHostHighCPUUsage
-      expr: pve_node_cpu_usage{job="proxmox"} > 80
+      expr: (pve_cpu_usage_ratio{id="node/proxmox"} / pve_cpu_usage_limit{id="node/proxmox"}) * 100  > 80
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de CPU no host Proxmox"
-        description: "O host Proxmox {{ $labels.instance }} está com uso de CPU acima de 80% nos últimos 10 minutos."
-        dashboard_url: "https://grafana.seu-dominio.com/d/your-proxmox-dashboard-id"
+        description: "O host Proxmox {{ $labels.instance }} está com uso de CPU acima de 80% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso crítico de CPU no host Proxmox
     - alert: ProxmoxHostCriticalCPUUsage
-      expr: pve_node_cpu_usage{job="proxmox"} > 95
+      expr: (pve_cpu_usage_ratio{id="node/proxmox"} / pve_cpu_usage_limit{id="node/proxmox"}) * 100 > 95
       for: 5m
       labels:
         severity: critical
       annotations:
         summary: "Uso crítico de CPU no host Proxmox"
-        description: "O host Proxmox {{ $labels.instance }} está com uso de CPU acima de 95% nos últimos 5 minutos."
+        description: "O host Proxmox {{ $labels.instance }} está com uso de CPU acima de 95% ({{ $value | humanizePercentage }}) nos últimos 5 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso elevado de memória no host Proxmox
     - alert: ProxmoxHostHighMemoryUsage
-      expr: pve_node_memory_usage{job="proxmox"} > 80
+      expr: (pve_memory_usage_bytes{id="node/proxmox"} / pve_memory_size_bytes{id="node/proxmox"}) * 100 > 80
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de memória no host Proxmox"
-        description: "O host Proxmox {{ $labels.instance }} está com uso de memória acima de 80% nos últimos 10 minutos."
+        description: "O host Proxmox {{ $labels.instance }} está com uso de memória acima de 80% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso crítico de memória no host Proxmox
     - alert: ProxmoxHostCriticalMemoryUsage
-      expr: pve_node_memory_usage{job="proxmox"} > 95
+      expr: (pve_memory_usage_bytes{id="node/proxmox"} / pve_memory_size_bytes{id="node/proxmox"}) * 100 > 95
       for: 5m
       labels:
         severity: critical
       annotations:
         summary: "Uso crítico de memória no host Proxmox"
-        description: "O host Proxmox {{ $labels.instance }} está com uso de memória acima de 95% nos últimos 5 minutos."
+        description: "O host Proxmox {{ $labels.instance }} está com uso de memória acima de 95% ({{ $value | humanizePercentage }}) nos últimos 5 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso elevado de disco no host Proxmox
     - alert: ProxmoxHostHighDiskUsage
-      expr: pve_storage_usage{job="proxmox"} > 80
+      expr: (pve_disk_usage_bytes{id=~"storage/.*"} / pve_disk_size_bytes) * 100 > 95
       for: 30m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de disco no host Proxmox"
-        description: "O storage '{{ $labels.storage }}' no host Proxmox {{ $labels.instance }} está com uso acima de 80% nos últimos 30 minutos."
+        description: "O storage {{ $labels.id }} no host Proxmox {{ $labels.instance }} está com uso acima de 80% ({{ $value | humanizePercentage }}) nos últimos 30 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso crítico de disco no host Proxmox
     - alert: ProxmoxHostCriticalDiskUsage
-      expr: pve_storage_usage{job="proxmox"} > 95
+      expr: (pve_disk_usage_bytes{id=~"storage/.*"} / pve_disk_size_bytes) * 100 > 99
       for: 15m
       labels:
         severity: critical
       annotations:
         summary: "Uso crítico de disco no host Proxmox"
-        description: "O storage '{{ $labels.storage }}' no host Proxmox {{ $labels.instance }} está com uso acima de 95% nos últimos 15 minutos."
+        description: "O storage {{ $labels.id }} no host Proxmox {{ $labels.instance }} está com uso acima de 95% ({{ $value | humanizePercentage }}) nos últimos 15 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
   - name: proxmox.vm.rules
     rules:
     # Alerta para uso elevado de CPU em VM do Proxmox
     - alert: ProxmoxVMHighCPUUsage
-      expr: pve_vm_cpu_usage{job="proxmox"} > 90
+      expr: ((pve_cpu_usage_ratio * on(id, instance) group_left(name, type) pve_guest_info) / (pve_cpu_usage_limit * on(id, instance) group_left(name, type) pve_guest_info)) * 100 > 90
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de CPU em VM do Proxmox"
-        description: "A VM '{{ $labels.vmid }}' no host Proxmox {{ $labels.instance }} está com uso de CPU acima de 90% nos últimos 10 minutos."
+        description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de CPU acima de 90% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso elevado de memória em VM do Proxmox
     - alert: ProxmoxVMHighMemoryUsage
-      expr: pve_vm_memory_usage{job="proxmox"} > 90
+      expr: ((pve_memory_usage_bytes * on(id, instance) group_left(name, type) pve_guest_info) / (pve_memory_size_bytes * on(id, instance) group_left(name, type) pve_guest_info)) * 100 > 90
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de memória em VM do Proxmox"
-        description: "A VM '{{ $labels.vmid }}' no host Proxmox {{ $labels.instance }} está com uso de memória acima de 90% nos últimos 10 minutos."
+        description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de memória acima de 90% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso elevado de disco em VM do Proxmox
     - alert: ProxmoxVMHighDiskUsage
-      expr: pve_vm_disk_usage{job="proxmox"} > 90
+      expr: ((pve_disk_usage_bytes * on(id, instance) group_left(name, type) pve_guest_info{type="lxc"}) / (pve_disk_size_bytes * on(id, instance) group_left(name, type) pve_guest_info{type="lxc"})) * 100 > 90
       for: 30m
       labels:
         severity: warning
       annotations:
-        summary: "Alto uso de disco em VM do Proxmox"
-        description: "O disco da VM '{{ $labels.vmid }}' no host Proxmox {{ $labels.instance }} está com uso acima de 90% nos últimos 30 minutos."
+        summary: "Alto uso de disco em LXC do Proxmox"
+        description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de disco acima de 90% ({{ $value | humanizePercentage }}) nos últimos 30 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"

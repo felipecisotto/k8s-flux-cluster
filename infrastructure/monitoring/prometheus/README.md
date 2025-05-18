@@ -57,11 +57,13 @@ Para configurar o bot do Telegram:
 Para testar se o AlertManager está enviando notificações corretamente para o Telegram, você pode usar a API RESTful do AlertManager:
 
 1. Configure um port-forward para o serviço do AlertManager:
+
    ```bash
    kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093
    ```
 
 2. Envie um alerta de teste usando curl:
+
    ```bash
    curl -XPOST http://localhost:9093/api/v2/alerts \
      -H "Content-Type: application/json" \
