@@ -8,7 +8,7 @@ Esta pasta contém a configuração do Prometheus para monitoramento do cluster 
 prometheus/
 ├── deployment.yaml           # HelmRelease do Prometheus e AlertManager
 ├── kubelet-scrape.yaml       # Configuração para scrape dos kubelet metrics
-├── app-alerts.yaml           # Regras de alertas para aplicações e Proxmox
+├── app-alerts.yaml           # Regras de alertas para aplicações, Proxmox e Kubernetes
 ├── kustomization.yaml        # Kustomize para organizar os recursos
 └── README.md                 # Esta documentação
 ```
@@ -84,7 +84,7 @@ Para testar se o AlertManager está enviando notificações corretamente para o 
    ```
 
 3. Você também pode acessar a interface web do AlertManager em:
-   https://alertmanager.felipecisotto.com.br
+   - [AlertManager](https://alertmanager.felipecisotto.com.br)
 
 ### Regras de Alertas
 
@@ -114,8 +114,8 @@ Foram configurados alertas para monitorar o uso de recursos no host Proxmox e su
 | ProxmoxHostCriticalCPUUsage | Uso de CPU > 95% por 5min | Critical |
 | ProxmoxHostHighMemoryUsage | Uso de memória > 80% por 10min | Warning |
 | ProxmoxHostCriticalMemoryUsage | Uso de memória > 95% por 5min | Critical |
-| ProxmoxHostHighDiskUsage | Uso de disco > 80% por 30min | Warning |
-| ProxmoxHostCriticalDiskUsage | Uso de disco > 95% por 15min | Critical |
+| ProxmoxHostHighDiskUsage | Uso de disco > 95% por 30min | Warning |
+| ProxmoxHostCriticalDiskUsage | Uso de disco > 99% por 15min | Critical |
 
 ##### VMs Proxmox
 
@@ -124,6 +124,35 @@ Foram configurados alertas para monitorar o uso de recursos no host Proxmox e su
 | ProxmoxVMHighCPUUsage | Uso de CPU > 90% por 10min | Warning |
 | ProxmoxVMHighMemoryUsage | Uso de memória > 90% por 10min | Warning |
 | ProxmoxVMHighDiskUsage | Uso de disco > 90% por 30min | Warning |
+
+#### Alertas para Kubernetes
+
+Foram configurados alertas para monitorar o estado dos pods, recursos dos nós e componentes do sistema Kubernetes.
+
+##### Alertas para Pods
+
+| Alerta | Descrição | Severidade |
+|--------|-----------|------------|
+| KubernetesPodRestartingTooMuch | Pod reiniciou > 5 vezes na última hora | Warning |
+| KubernetesPodNotHealthy | Pod em estado Failed/Pending/Unknown por > 5min | Warning |
+| KubernetesContainerWaiting | Container em estado waiting por > 1h | Warning |
+
+##### Alertas para Recursos de Nós
+
+| Alerta | Descrição | Severidade |
+|--------|-----------|------------|
+| KubernetesNodeHighCPUUsage | Uso de CPU do nó > 80% por 5min | Warning |
+| KubernetesNodeHighMemoryUsage | Uso de memória do nó > 80% por 5min | Warning |
+| KubernetesNodeDiskPressure | Uso de disco do nó > 85% por 5min | Warning |
+
+##### Alertas para Componentes do Sistema
+
+| Alerta | Descrição | Severidade |
+|--------|-----------|------------|
+| KubernetesNamespaceManyFailedPods | > 5 pods Failed/Pending em um namespace por 10min | Warning |
+| KubernetesPersistentVolumeClaimPending | PVC pendente por > 1h | Warning |
+| KubernetesEtcdHighNumberOfLeaderChanges | > 3 mudanças de líder no etcd na última hora | Critical |
+| KubernetesDeploymentReplicasMismatch | Deployment com réplicas indisponíveis por > 15min | Warning |
 
 ## Como Adicionar Novos Alvos (Targets)
 

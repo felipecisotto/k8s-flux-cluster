@@ -180,3 +180,108 @@ spec:
         summary: "Alto uso de disco em LXC do Proxmox"
         description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de disco acima de 90% ({{ $value | humanizePercentage }}) nos últimos 30 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kubernetes-alerts
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus-operator
+    app.kubernetes.io/part-of: kube-prometheus
+spec:
+  groups:
+  - name: kubernetes.pods.rules
+    rules:
+    # Alerta para pods com muitos restarts
+    - alert: KubernetesPodRestartingTooMuch
+      expr: increase(kube_pod_container_status_restarts_total[1h]) > 5
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod reiniciando frequentemente"
+        description: "O pod {{ $labels.pod }} no namespace {{ $labels.namespace }} reiniciou {{ $value }} vezes na última hora."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+    # Alerta para pods em estado unhealthy por muito tempo
+    - alert: KubernetesPodNotHealthy
+      expr: sum by(namespace, pod) (kube_pod_status_phase{phase=~"Failed|Pending|Unknown"}) > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod não está saudável"
+        description: "O pod {{ $labels.pod }} no namespace {{ $labels.namespace }} está em estado não saudável (Failed, Pending ou Unknown) por mais de 5 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+    # Alerta para containeres que não iniciam corretamente
+    - alert: KubernetesContainerWaiting
+      expr: sum by(namespace, pod, container) (kube_pod_container_status_waiting_reason{reason!=""}) > 0
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        summary: "Container em estado waiting por muito tempo"
+        description: "O container {{ $labels.container }} no pod {{ $labels.pod }} (namespace {{ $labels.namespace }}) está em estado waiting há mais de 1 hora."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+  - name: kubernetes.resource.rules
+    rules:
+    # Alerta para nós com pouco espaço em disco
+    - alert: KubernetesNodeDiskPressure
+      expr: 100 - ((node_filesystem_avail_bytes{mountpoint="/"} * 100) / node_filesystem_size_bytes{mountpoint="/"}) > 85
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Nó com pouco espaço em disco"
+        description: "O nó {{ $labels.instance }} está com utilização de disco acima de 85% ({{ $value | humanizePercentage }}) nos últimos 5 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+  - name: kubernetes.system.rules
+    rules:
+    # Alerta para namespaces com muitos pods em estado failed ou pending
+    - alert: KubernetesNamespaceManyFailedPods
+      expr: sum by(namespace) (kube_pod_status_phase{phase=~"Failed|Pending"}) > 5
+      for: 10m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Muitos pods com falha em um namespace"
+        description: "O namespace {{ $labels.namespace }} possui {{ $value }} pods em estado Failed ou Pending por mais de 10 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+    # Alerta para PVCs pendentes
+    - alert: KubernetesPersistentVolumeClaimPending
+      expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} == 1
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        summary: "PVC pendente por muito tempo"
+        description: "O PVC {{ $labels.persistentvolumeclaim }} no namespace {{ $labels.namespace }} está pendente há mais de 1 hora."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+    # Alerta para problemas no etcd
+    - alert: KubernetesEtcdHighNumberOfLeaderChanges
+      expr: increase(etcd_server_leader_changes_seen_total[1h]) > 3
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Alta taxa de mudanças de líder no etcd"
+        description: "Etcd viu {{ $value }} mudanças de líder na última hora - isso pode indicar instabilidade no cluster."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
+
+    # Alerta para deployment incompleto
+    - alert: KubernetesDeploymentReplicasMismatch
+      expr: kube_deployment_spec_replicas != kube_deployment_status_replicas_available
+      for: 15m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Deployment com réplicas indisponíveis"
+        description: "O deployment {{ $labels.deployment }} no namespace {{ $labels.namespace }} não conseguiu provisionar todas as réplicas desejadas por mais de 15 minutos."
+        dashboard_url: "https://grafana.felipecisotto.com.br/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1"
