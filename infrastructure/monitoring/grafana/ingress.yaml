@@ -31,3 +31,20 @@ spec:
           port: 9090
   tls:
     secretName: certificates
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: alertmanager-ingress
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`alertmanager.felipecisotto.com.br`)
+      kind: Rule
+      services:
+        - name: prometheus-kube-prometheus-alertmanager
+          port: 9093
+  tls:
+    secretName: certificates

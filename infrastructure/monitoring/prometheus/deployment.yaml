@@ -20,6 +20,59 @@ spec:
   values:
     grafana:
       enabled: false
+
+    # Configuração do AlertManager
+    alertmanager:
+      enabled: true
+      # Configuração direta do AlertManager em vez de usar Secret
+      config:
+        global:
+          resolve_timeout: 5m
+          telegram_api_url: https://api.telegram.org
+        route:
+          receiver: 'telegram-notifications'
+          group_by: ['alertname', 'job', 'severity']
+          group_wait: 30s
+          group_interval: 5m
+          repeat_interval: 4h
+          routes:
+            - match:
+                severity: critical
+              receiver: 'telegram-notifications'
+              continue: true
+            - match:
+                severity: warning
+              receiver: 'telegram-notifications'
+              continue: true
+        receivers:
+          - name: 'telegram-notifications'
+            telegram_configs:
+              - bot_token: '5851294352:AAH1ZL_NI36K_dDe28vke6RdBOhCFkNTxZ8'
+                chat_id: 5930414419
+                parse_mode: 'HTML'
+                message: |
+                  🚨 <b>{{ .Status | toUpper }}</b> 🚨
+                  <b>Alerta:</b> {{ .CommonAnnotations.summary }}
+                  <b>Descrição:</b> {{ .CommonAnnotations.description }}
+                  <b>Severidade:</b> {{ .CommonLabels.severity }}
+                  <b>Início:</b> {{ .StartsAt.Format "02-01-2006 15:04:05" }}
+                  <b>URL:</b> {{ .GeneratorURL }}
+        inhibit_rules:
+          - source_match:
+              severity: 'critical'
+            target_match:
+              severity: 'warning'
+            equal: ['alertname', 'namespace', 'service']
+
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi
+
     prometheus:
       prometheusSpec:
         podMonitorNamespaceSelector:
@@ -50,6 +103,20 @@ spec:
               module: [default]
               cluster: ['1']
               node: ['1']
+        # Configuração para encontrar regras de alertas pela label
+        ruleSelector:
+          matchLabels:
+            app.kubernetes.io/name: prometheus-operator
+            app.kubernetes.io/part-of: kube-prometheus
+        # Recursos de armazenamento
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 10Gi
+
     kube-state-metrics:
       enabled: true
       metricLabelsAllowlist:
@@ -57,5 +124,6 @@ spec:
         - pods=[*]
         - services=[*]
         - namespaces=[*]
+
     prometheus-node-exporter:
       enabled: true
