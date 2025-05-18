@@ -4,7 +4,7 @@ Este diretório contém a configuração do Grafana utilizando Flux e Helm para 
 
 ## Estrutura de Diretórios
 
-```
+```text
 grafana/
 ├── dashboards/
 │   ├── json/                     # Diretório contendo os arquivos JSON dos dashboards (referência)
@@ -28,18 +28,18 @@ Para adicionar um novo dashboard ao Grafana, siga os passos abaixo:
    - Ajustar as referências de datasource para uid correto (ex: `"uid": "prometheus"`)
 4. Adicione o arquivo ao `configMapGenerator` no arquivo `dashboards/kustomization.yaml`:
 
-```yaml
-configMapGenerator:
-  - name: grafana-json-dashboards
-    namespace: monitoring
-    options:
-      labels:
-        grafana_dashboard: "1"
-      disableNameSuffixHash: true
-    files:
-      - json/financial-backend-golden-signals.json
-      - json/meu-dashboard.json    # Adicione seu novo dashboard aqui
-```
+    ```yaml
+    configMapGenerator:
+    - name: grafana-json-dashboards
+        namespace: monitoring
+        options:
+        labels:
+            grafana_dashboard: "1"
+        disableNameSuffixHash: true
+        files:
+        - json/financial-backend-golden-signals.json
+        - json/meu-dashboard.json    # Adicione seu novo dashboard aqui
+    ```
 
 5. Faça commit das alterações e deixe o Flux sincronizar com o cluster
 
@@ -83,6 +83,7 @@ Esta configuração combina o `configMapGenerator` do Kustomize com o sidecar do
 3. O Grafana carrega os dashboards sem precisar de volumes montados manualmente
 
 Isso oferece um fluxo de trabalho GitOps ideal:
+
 - Adicione ou altere dashboards no repositório
 - O Flux aplica as alterações no cluster
 - O sidecar detecta os novos ConfigMaps e atualiza o Grafana
