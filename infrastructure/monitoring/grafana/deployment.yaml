@@ -30,40 +30,38 @@ spec:
         level: debug
       paths:
         provisioning: /etc/grafana/provisioning
-      dashboards:
-        min_refresh_interval: 5s
-        default_home_dashboard_path: /var/lib/grafana/dashboards/financial-backend-golden-signals.json
 
     # Configuração para montar os dashboards a partir de JSON
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-        - name: 'financial'
+        - name: 'default'
           orgId: 1
-          folder: 'Financial'
+          folder: ''
           type: file
           disableDeletion: false
           allowUiUpdates: true
           updateIntervalSeconds: 5
           options:
             path: /var/lib/grafana/dashboards
-            foldersFromFilesStructure: false
+            foldersFromFilesStructure: true
 
     # Configuração dos sidecars para datasources e dashboards
     sidecar:
-      datasources:
-        enabled: true
-        label: grafana_datasource
-        labelValue: "1"
-        searchNamespace: ALL
       dashboards:
         enabled: true
         label: grafana_dashboard
         labelValue: "1"
         searchNamespace: ALL
+        folderAnnotation: grafana_folder
         provider:
-          foldersFromFilesStructure: false
+          foldersFromFilesStructure: true
+      datasources:
+        enabled: true
+        label: grafana_datasource
+        labelValue: "1"
+        searchNamespace: ALL
 
     # Volumes não são necessários quando usando sidecar
     extraVolumeMounts: []

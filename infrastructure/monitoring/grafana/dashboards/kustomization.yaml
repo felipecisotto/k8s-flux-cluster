@@ -5,14 +5,48 @@ resources:
   - datasources.yaml
 
 configMapGenerator:
-  - name: grafana-json-dashboards
+  - name: grafana-dashboards-default
     namespace: monitoring
     options:
       labels:
         grafana_dashboard: "1"
+        grafana_folder: ""
       disableNameSuffixHash: true
+      annotations:
+        folder: ""
+    files:
+      - json/home.json
+  - name: grafana-dashboards-apps
+    namespace: monitoring
+    options:
+      labels:
+        grafana_dashboard: "1"
+        grafana_folder: "Apps"
+      disableNameSuffixHash: true
+      annotations:
+        folder: "Apps"
     files:
       - json/financial-backend-golden-signals.json
       - json/logs.json
+  - name: grafana-dashboards-k8s
+    namespace: monitoring
+    options:
+      labels:
+        grafana_dashboard: "1"
+        grafana_folder: "Kubernetes"
+      disableNameSuffixHash: true
+      annotations:
+        folder: "Kubernetes"
+    files:
       - json/k8s.json
+  - name: grafana-dashboards-proxmox
+    namespace: monitoring
+    options:
+      labels:
+        grafana_dashboard: "1"
+        grafana_folder: "Proxmox"
+      disableNameSuffixHash: true
+      annotations:
+        folder: "Proxmox"
+    files:
       - json/proxmox.json
