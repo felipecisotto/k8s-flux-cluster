@@ -18,24 +18,28 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "gridPos": {
-        "h": 3,
-        "w": 24,
+        "h": 10,
+        "w": 6,
         "x": 0,
         "y": 0
       },
-      "id": 12,
+      "id": 13,
       "options": {
-        "content": "# Monitoramento - Financial K8s Cluster\n\nBem-vindo ao dashboard principal de monitoramento do cluster Kubernetes.",
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "## Dashboards Disponíveis\n\n### Monitoramento de Aplicações\n* [Financial Backend - Golden Signals](/d/financial-backend-golden-signals/opentelemetry-4-golden-signals?orgId=1)\n* [Logs - Aplicações](/d/logs/logs?orgId=1)\n\n### Infraestrutura\n* [Kubernetes - Cluster Monitoring](/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1)\n* [Proxmox - Monitoramento de Hosts e VMs](/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s)\n\n### Alertas e Notificações\n* [AlertManager - UI](https://alertmanager.felipecisotto.com.br)\n* [Prometheus - UI](https://prometheus.felipecisotto.com.br)",
         "mode": "markdown"
       },
       "pluginVersion": "9.5.1",
-      "title": "Bem-vindo",
+      "title": "Links Úteis",
       "type": "text"
     },
     {
@@ -49,11 +53,13 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "min": 0,
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-red",
                 "value": null
               },
               {
@@ -67,9 +73,9 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 0,
-        "y": 3
+        "w": 3,
+        "x": 6,
+        "y": 0
       },
       "id": 9,
       "options": {
@@ -96,6 +102,7 @@
           "editorMode": "builder",
           "expr": "count(ALERTS{alertstate=\"firing\", severity=\"critical\"})",
           "instant": true,
+          "interval": "",
           "range": false,
           "refId": "A"
         }
@@ -132,9 +139,9 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 8,
-        "y": 3
+        "w": 3,
+        "x": 9,
+        "y": 0
       },
       "id": 10,
       "options": {
@@ -193,9 +200,9 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 3
+        "w": 4,
+        "x": 12,
+        "y": 0
       },
       "id": 11,
       "options": {
@@ -228,6 +235,200 @@
       ],
       "title": "Total de Regras de Alertas",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "expr": "sum(kube_pod_status_phase{phase=\"Running\"})",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total de Pods em Execução",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 6,
+        "y": 4
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "expr": "sum(rate(node_cpu_seconds_total{mode!=\"idle\"}[1m])) / count(node_cpu_seconds_total{mode=\"idle\"})",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Utilização de CPU do Cluster",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 11,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / sum(node_memory_MemTotal_bytes)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Utilização de Memória do Cluster",
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -301,11 +502,13 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 10
       },
       "id": 1,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "enablePagination": false,
           "fields": "",
           "reducer": [
@@ -359,239 +562,6 @@
         }
       ],
       "type": "table"
-    },
-    {
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 15
-      },
-      "id": 6,
-      "links": [],
-      "options": {
-        "folderId": null,
-        "maxItems": 10,
-        "query": "",
-        "showHeadings": true,
-        "showRecentlyViewed": false,
-        "showSearch": false,
-        "showStarred": true,
-        "tags": []
-      },
-      "pluginVersion": "9.5.1",
-      "title": "Dashboards Favoritos",
-      "type": "dashlist"
-    },
-    {
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 15
-      },
-      "id": 13,
-      "options": {
-        "content": "## Dashboards Disponíveis\n\n### Monitoramento de Aplicações\n* [Financial Backend - Golden Signals](/d/financial-backend-golden-signals/opentelemetry-4-golden-signals?orgId=1)\n* [Logs - Aplicações](/d/logs/logs?orgId=1)\n\n### Infraestrutura\n* [Kubernetes - Cluster Monitoring](/d/kubernetes-cluster/kubernetes-cluster-monitoring-via-prometheus?orgId=1)\n* [Proxmox - Monitoramento de Hosts e VMs](/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s)\n\n### Alertas e Notificações\n* [AlertManager - UI](https://alertmanager.felipecisotto.com.br)\n* [Prometheus - UI](https://prometheus.felipecisotto.com.br)",
-        "mode": "markdown"
-      },
-      "pluginVersion": "9.5.1",
-      "title": "Links Úteis",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 24
-      },
-      "id": 3,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.5.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "builder",
-          "expr": "sum(rate(node_cpu_seconds_total{mode!=\"idle\"}[1m])) / count(node_cpu_seconds_total{mode=\"idle\"})",
-          "instant": false,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Utilização de CPU do Cluster",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 24
-      },
-      "id": 4,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.5.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "builder",
-          "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / sum(node_memory_MemTotal_bytes)",
-          "instant": false,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Utilização de Memória do Cluster",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 24
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.5.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "builder",
-          "expr": "sum(kube_pod_status_phase{phase=\"Running\"})",
-          "instant": false,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total de Pods em Execução",
-      "type": "stat"
     }
   ],
   "refresh": "10s",
@@ -634,6 +604,5 @@
   "title": "Home",
   "uid": "home",
   "version": 1,
-  "weekStart": "",
-  "isDefault": true
+  "weekStart": ""
 }
