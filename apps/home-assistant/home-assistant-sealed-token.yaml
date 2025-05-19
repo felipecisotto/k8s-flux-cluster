@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: home-assistant-token
+  namespace: apps
+spec:
+  encryptedData:
+    token: AgDTcKzNafnvh47UcUJAm2/AMSniSdHk4sw7Y66gNyOer2IeJqx4FVHfR09QJCVI3Df+pCTRZp8Lq09AG4dRKvCZJDUlDGECk9C0CYvh5ri594NbMF5T50mY3LXgQ/slwO0qehmz58e/W66ZzFC1n0vK5sVqy4Cc8+Std6xhepEhks2Py+qlNfs6reJAR0pkIeX1SmTWMmrJ/4Lr/xbPuJe5dPGBKPN2TMVmStQylWYbEbMTiWKsA/UAUMmcvcNzwWqtpL84obeBOUp0MxWkpQoSbF+ig8DuRoHgkVMUfgO6g3SyaFeKAds+EWYpQx5KUFO0fhQegxndKy3ygms7DNsrQYZtTEPdx5hn+J0jWiVC09P0LYsfO/cUVPoMW0YcvFw4JJp+iaC2XHe4uf6d5sSdmjr0czk8CASLGTO8FT9eWSX+4GoV+/wlOk0sjjyTTdGI45j6g303V2EjDnrHwgkL3QiA7q/0vJqLhOe9J+7gZ53MtqHYycd7aUo8JVEIYAqIfbz5AL4tBCeOMCsOQhvykqGOsPhCMijzAsY7vAquxJ7FIMpSGRUrHT+XZjDagWO7BpeEusmAKFCIVYlV7DwQI+GCpY8u90XP2DFdSvQ6TyAd4T5QJ2ut0y5tMrTWQrxN1Tx8lwDWL9j7nUiVlS52Kkm+gO/LPtREo70jIYeGIdjpn+J2T0u6UotXXQgwzsd1285c3kxbK8sSs5041BVEg1TdLj2EEeQleBTb3bFVseiU5CWZrNVaOOAn/+meFkHXHZm/A7i25yXpc8Dpsoht84yv+pMPw/aMkhuXP5K/ymVlvDaoPtgJO4gr7jxtRLCRDrfdjrTTeT+ot3WJbx/Yz0+yLmjeTZ6s/s1GTyQ4/3RZXOt0Im5+ou4rLS53qqVvmOQ7I4xY0BsW+4ZS7Aqy0JQO60cUezm/Gf4XMOM49Wpzli2qCnI=
+  template:
+    metadata:
+      creationTimestamp: null
+      name: home-assistant-token
+      namespace: apps
+    type: Opaque

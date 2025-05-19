@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: home-assistant-monitor
+  namespace: apps
+  labels:
+    podmonitorscrape: "true"
+    app: home-assistant-service
+spec:
+  selector:
+    matchLabels:
+      app: homeassistant
+  endpoints:
+  - port: homeassistant
+    path: /api/prometheus
+    scheme: http
+    interval: 60s
+    bearerTokenSecret:
+      name: home-assistant-token
+      key: token
+  namespaceSelector:
+    matchNames:
+    - apps

@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: homeassistant-service
   namespace: apps
+  labels:
+    app: homeassistant
 spec:
   selector:
     app: homeassistant-label
