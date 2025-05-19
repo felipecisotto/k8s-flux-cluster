@@ -21,7 +21,7 @@ spec:
     serviceMonitor:
       enabled: true
     grafana:
-      enabled: false # Não cria o Grafana integrado, já que você tem o seu.
+      enabled: false
     deploymentMode: SingleBinary
     loki:
       auth_enabled: false
@@ -36,7 +36,7 @@ spec:
             index:
               prefix: loki_index_
               period: 24h
-            object_store: filesystem # we're storing on filesystem so there's no real persistence here.
+            object_store: filesystem
             schema: v13
     singleBinary:
       replicas: 1
@@ -46,6 +46,8 @@ spec:
       replicas: 0
     write:
       replicas: 0
+    chunksCache:
+      enabled: false   # 👈 desativa o pod loki-chunks-cache
     monitoring:
       selfMonitoring:
         enabled: true
