@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: financial-frontend
+  namespace: financial
+spec:
+  entryPoints:
+    - websecure
+    - web
+  routes:
+    - match: Host(`financial.felipecisotto.com.br`)
+      kind: Rule
+      services:
+        - name: financial-frontend
+          port: 80
+  tls:
+    secretName: certificates 

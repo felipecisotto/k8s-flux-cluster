@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: financial-frontend
+  namespace: financial
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: financial-frontend
+  template:
+    metadata:
+      labels:
+        app: financial-frontend
+    spec:
+      containers:
+        - name: financial-frontend
+          image: ghcr.io/felipecisotto/financial-frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: financial-frontend-config
+                  key: VITE_API_URL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi 

@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: financial-frontend
+  namespace: financial
+spec:
+  imageRepositoryRef:
+    name: financial-frontend
+  policy:
+    semver:
+      range: '>=0.0.0' 

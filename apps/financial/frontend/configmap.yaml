@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: financial-frontend-config
+  namespace: financial
+data:
+  VITE_API_URL: "https://api.felipecisotto.com.br/financial" 
