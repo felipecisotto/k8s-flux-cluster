@@ -12,3 +12,15 @@ spec:
   - name: homeassistant
     port: 8123
     targetPort: 8123
+  - name: mqtt
+    port: 1883
+    targetPort: 1883
+    protocol: TCP
+  - name: mqtt-websockets
+    port: 9001
+    targetPort: 9001
+    protocol: TCP
+  - name: code-server
+    port: 8080
+    targetPort: 8080
+    protocol: TCP

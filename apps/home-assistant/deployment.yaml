@@ -14,25 +14,152 @@ spec:
         app: homeassistant-label
     spec:
       hostNetwork: true
+      initContainers:
+        - name: fix-permissions
+          image: busybox:1.35
+          command:
+            - sh
+            - -c
+            - |
+              chown -R 1000:1000 /config
+              chmod -R 755 /config
+              ls -la /config
+          volumeMounts:
+            - name: homeassistant-pv-config
+              mountPath: /config
+          securityContext:
+            runAsUser: 0
       containers:
       - name: homeassistant
         image: homeassistant/home-assistant:stable
         ports:
           - containerPort: 8123
-        resources: {}
+            name: http
+        env:
+          - name: TZ
+            value: "America/Sao_Paulo"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
         volumeMounts:
           - mountPath: /config
             name: homeassistant-pv-config
-          - mountPath: /etc/localtime
-            name: homeassistant-pv-time
-            readOnly: true
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8123
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8123
+          initialDelaySeconds: 15
+          periodSeconds: 15
+      - name: mosquitto
+        image: eclipse-mosquitto:2.0
+        ports:
+          - containerPort: 1883
+            name: mqtt
+          - containerPort: 9001
+            name: websockets
+        volumeMounts:
+          - mountPath: /mosquitto/data
+            name: mosquitto-data
+          - mountPath: /mosquitto/log
+            name: mosquitto-log
+          - mountPath: /mosquitto/config/mosquitto.conf
+            name: mosquitto-config
+            subPath: mosquitto.conf
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        livenessProbe:
+          tcpSocket:
+            port: 1883
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          tcpSocket:
+            port: 1883
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      - name: code-server
+        image: codercom/code-server:latest
+        ports:
+          - containerPort: 8080
+            name: code-server
+        env:
+          - name: PASSWORD
+            value: "homeassistant"
+          - name: TZ
+            value: "America/Sao_Paulo"
+          - name: DEFAULT_WORKSPACE
+            value: "/config"
+        args:
+          - --bind-addr
+          - 0.0.0.0:8080
+          - --auth
+          - password
+          - --disable-telemetry
+          - --disable-update-check
+          - /config
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+          - mountPath: /config
+            name: homeassistant-pv-config
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 15
       restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       volumes:
         - name: homeassistant-pv-config
           persistentVolumeClaim:
             claimName: homeassistant-pv-config
-        - name: homeassistant-pv-time
+        - name: mosquitto-data
           persistentVolumeClaim:
-            claimName: homeassistant-pv-time
-            readOnly: true
+            claimName: mosquitto-data-pvc
+        - name: mosquitto-log
+          persistentVolumeClaim:
+            claimName: mosquitto-log-pvc
+        - name: mosquitto-config
+          configMap:
+            name: mosquitto-config
 status: {}

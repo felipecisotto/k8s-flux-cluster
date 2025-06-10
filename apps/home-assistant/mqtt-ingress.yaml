@@ -1,0 +1,19 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mqtt-websocket-ingress
+  namespace: apps
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  entryPoints:
+    - websecure
+    - web
+  routes:
+    - match: Host(`mqtt.felipecisotto.com.br`)
+      kind: Rule
+      services:
+        - name: homeassistant-service
+          port: 9001
+  tls:
+    secretName: certificates

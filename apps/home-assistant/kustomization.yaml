@@ -7,3 +7,5 @@ resources:
   - pvc.yaml
   - home-assistant-sealed-token.yaml
   - home-assistant-scrape.yaml
+  - mosquitto-config.yaml
+  - mqtt-ingress.yaml

@@ -56,14 +56,35 @@ O cluster está organizado em duas principais categorias:
   - **Recursos**: Memory: 250Mi-500Mi
   - **Armazenamento**: PVC para dados persistentes
 
-### Home Assistant
+### Home Assistant + MQTT + Code Server
 - **Serviço**: Home Assistant
   - **Namespace**: apps
   - **Contexto**: Plataforma de automação residencial e IoT
   - **Imagem**: `homeassistant/home-assistant:stable`
   - **Porta**: 8123
-  - **Configuração**: Host Network habilitado
-  - **Armazenamento**: PVC para configurações
+  - **Recursos**: CPU: 200m-1000m, Memory: 512Mi-1Gi
+  - **Armazenamento**: PVC para configurações (10Gi)
+  - **Timezone**: America/Sao_Paulo
+
+- **Serviço**: Mosquitto MQTT Broker
+  - **Namespace**: apps
+  - **Contexto**: Broker MQTT para comunicação IoT com Home Assistant
+  - **Imagem**: `eclipse-mosquitto:2.0`
+  - **Versão**: 2.0
+  - **Portas**: 1883 (MQTT), 9001 (WebSockets)
+  - **Recursos**: CPU: 50m-200m, Memory: 64Mi-128Mi
+  - **Armazenamento**: 1Gi (dados) + 500Mi (logs)
+  - **Acesso Externo**: `mqtt.felipecisotto.com.br` (WebSockets)
+
+- **Serviço**: Code Server
+  - **Namespace**: apps
+  - **Contexto**: Editor VS Code via web para configurações do Home Assistant
+  - **Imagem**: `codercom/code-server:latest`
+  - **Porta**: 8080
+  - **Recursos**: CPU: 100m-500m, Memory: 256Mi-512Mi
+  - **Credenciais**: Password: `homeassistant`
+  - **Acesso Externo**: `ha-code.felipecisotto.com.br`
+  - **Volume**: Acesso compartilhado às configurações do HA
 
 ### Uptime Kuma
 - **Serviço**: Uptime Kuma

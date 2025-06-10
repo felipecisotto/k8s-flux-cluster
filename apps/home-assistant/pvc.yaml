@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: homeassistant-pv-time
+  name: homeassistant-pv-config
   namespace: apps
   labels:
     app: homeassistant-label
@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: homeassistant-pv-config
+  name: mosquitto-data-pvc
   namespace: apps
   labels:
     app: homeassistant-label
@@ -26,4 +26,19 @@ spec:
   storageClassName: local-path
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-log-pvc
+  namespace: apps
+  labels:
+    app: homeassistant-label
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 500Mi
