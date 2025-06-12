@@ -14,6 +14,11 @@ spec:
       kind: Rule
       services:
         - name: homeassistant-service
-          port: 1883 
+          port: 1883
+    - match: Host(`mqtt.felipecisotto.com.br`) && PathPrefix(`/mqtt`)
+      kind: Rule
+      services:
+        - name: homeassistant-service
+          port: 9001
   tls:
     secretName: certificates

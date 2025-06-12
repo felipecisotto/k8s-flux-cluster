@@ -8,10 +8,12 @@ data:
     # Configuração básica do Mosquitto MQTT Broker
     listener 1883
     allow_anonymous true
+    protocol mqtt
 
     # WebSocket support
     listener 9001
     protocol websockets
+    allow_anonymous true
 
     # Persistência
     persistence true
@@ -28,3 +30,7 @@ data:
     # Configurações de conexão
     connection_messages true
     log_timestamp_format %Y-%m-%d %H:%M:%S
+
+    # Configurações de segurança
+    password_file /mosquitto/config/passwd
+    acl_file /mosquitto/config/acl
