@@ -102,16 +102,6 @@ spec:
         description: "O host Proxmox {{ $labels.instance }} está com uso de CPU acima de 95% ({{ $value | humanizePercentage }}) nos últimos 5 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
-    # Alerta para uso elevado de memória no host Proxmox
-    - alert: ProxmoxHostHighMemoryUsage
-      expr: (pve_memory_usage_bytes{id="node/proxmox"} / pve_memory_size_bytes{id="node/proxmox"}) * 100 > 80
-      for: 10m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Alto uso de memória no host Proxmox"
-        description: "O host Proxmox {{ $labels.instance }} está com uso de memória acima de 80% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
-        dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso crítico de memória no host Proxmox
     - alert: ProxmoxHostCriticalMemoryUsage
@@ -161,13 +151,13 @@ spec:
 
     # Alerta para uso elevado de memória em VM do Proxmox
     - alert: ProxmoxVMHighMemoryUsage
-      expr: ((pve_memory_usage_bytes * on(id, instance) group_left(name, type) pve_guest_info) / (pve_memory_size_bytes * on(id, instance) group_left(name, type) pve_guest_info)) * 100 > 90
+      expr: ((pve_memory_usage_bytes * on(id, instance) group_left(name, type) pve_guest_info) / (pve_memory_size_bytes * on(id, instance) group_left(name, type) pve_guest_info)) * 100 > 95
       for: 10m
       labels:
         severity: warning
       annotations:
         summary: "Alto uso de memória em VM do Proxmox"
-        description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de memória acima de 90% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
+        description: "A VM '{{ $labels.name }}' ({{ $labels.type }}) no host Proxmox {{ $labels.instance }} está com uso de memória acima de 95% ({{ $value | humanizePercentage }}) nos últimos 10 minutos."
         dashboard_url: "https://grafana.felipecisotto.com.br/d/Dp7Cd57Zza/proxmox-overview?orgId=1&refresh=10s"
 
     # Alerta para uso elevado de disco em VM do Proxmox
