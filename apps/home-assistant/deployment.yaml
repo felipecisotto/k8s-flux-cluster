@@ -64,41 +64,6 @@ spec:
             port: 8123
           initialDelaySeconds: 15
           periodSeconds: 15
-      - name: mosquitto
-        image: eclipse-mosquitto:2.0
-        ports:
-          - containerPort: 1883
-            name: mqtt
-          - containerPort: 9001
-            name: websockets
-        volumeMounts:
-          - mountPath: /mosquitto/data
-            name: mosquitto-data
-          - mountPath: /mosquitto/log
-            name: mosquitto-log
-          - mountPath: /mosquitto/config/mosquitto.conf
-            name: mosquitto-config
-            subPath: mosquitto.conf
-          - mountPath: /mosquitto/config/acl
-            name: mosquitto-acl
-            subPath: acl
-        resources:
-          requests:
-            cpu: "50m"
-            memory: "64Mi"
-          limits:
-            cpu: "200m"
-            memory: "128Mi"
-        livenessProbe:
-          tcpSocket:
-            port: 1883
-          initialDelaySeconds: 10
-          periodSeconds: 30
-        readinessProbe:
-          tcpSocket:
-            port: 1883
-          initialDelaySeconds: 5
-          periodSeconds: 10
       - name: code-server
         image: codercom/code-server:latest
         ports:
@@ -156,16 +121,4 @@ spec:
         - name: homeassistant-pv-config
           persistentVolumeClaim:
             claimName: homeassistant-pv-config
-        - name: mosquitto-data
-          persistentVolumeClaim:
-            claimName: mosquitto-data-pvc
-        - name: mosquitto-log
-          persistentVolumeClaim:
-            claimName: mosquitto-log-pvc
-        - name: mosquitto-config
-          configMap:
-            name: mosquitto-config
-        - name: mosquitto-acl
-          configMap:
-            name: mosquitto-acl
 status: {}
