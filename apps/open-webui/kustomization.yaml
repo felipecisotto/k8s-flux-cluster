@@ -5,4 +5,6 @@ resources:
   - service.yaml
   - ingress.yaml
   - pvc.yaml
+  - pipelines-pvc.yaml
   - configmap.yaml 
+  - service-monitor.yaml

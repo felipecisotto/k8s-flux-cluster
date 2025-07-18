@@ -18,13 +18,41 @@ spec:
           image: ghcr.io/open-webui/open-webui:main
           ports:
             - containerPort: 8080
+            - containerPort: 4318
           envFrom:
             - configMapRef:
                 name: open-webui-config
           volumeMounts:
             - name: open-webui-data
               mountPath: /app/backend/data
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+        - name: open-webui-pipelines
+          image: ghcr.io/open-webui/pipelines:main
+          ports:
+            - containerPort: 9099
+          envFrom:
+            - configMapRef:
+                name: open-webui-config
+          volumeMounts:
+            - name: pipelines-data
+              mountPath: /app/pipelines
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
       volumes:
         - name: open-webui-data
           persistentVolumeClaim:
-            claimName: open-webui-pvc 
+            claimName: open-webui-pvc
+        - name: pipelines-data
+          persistentVolumeClaim:
+            claimName: open-webui-pipelines-pvc 

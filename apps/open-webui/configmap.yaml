@@ -4,4 +4,16 @@ metadata:
   name: open-webui-config
   namespace: apps
 data:
-  OLLAMA_API_BASE_URL: "http://192.168.0.206:11434" 
+  OLLAMA_API_BASE_URL: "http://192.168.0.206:11434"
+  # Configurações para o container pipelines
+  PIPELINES_API_BASE_URL: "http://192.168.0.206:11434"
+  PIPELINES_API_KEY: "0p3n-w3bu!" 
+  ENABLE_OTEL: "true"
+  OTEL_SERVICE_NAME: "open-webui"
+  # Enable metrics endpoint for Prometheus scraping
+  ENABLE_OTEL_METRICS: "true"
+  # Configure the metrics endpoint port
+  OTEL_METRICS_PORT: "4318"
+  # Additional OTEL configuration
+  OTEL_EXPORTER_OTLP_INSECURE: "true"
+  OTEL_TRACES_SAMPLER: "always_on"
