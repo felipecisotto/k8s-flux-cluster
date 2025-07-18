@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open-webui-config
+  namespace: apps
+data:
+  OLLAMA_API_BASE_URL: "http://192.168.0.206:11434" 
