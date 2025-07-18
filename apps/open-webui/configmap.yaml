@@ -4,4 +4,8 @@ metadata:
   name: open-webui-config
   namespace: apps
 data:
-  OLLAMA_API_BASE_URL: "http://192.168.0.206:11434" 
+  OLLAMA_API_BASE_URL: "http://192.168.0.206:11434"
+  # Configurações para o container pipelines
+  PIPELINES_API_BASE_URL: "http://192.168.0.206:11434"
+  PIPELINES_API_KEY: "0p3n-w3bu!" 
+  ENABLE_OTEL: "true"
