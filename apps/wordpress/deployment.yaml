@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: wordpress
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: wordpress
+    spec:
+      containers:
+        - name: wordpress
+          image: wordpress:6.4-apache
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "wordpress-mysql"
+            - name: WORDPRESS_DB_NAME
+              value: "wordpress"
+            - name: WORDPRESS_DB_USER
+              value: "wordpress"
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-mysql-secret
+                  key: mysql-password
+            - name: WORDPRESS_TABLE_PREFIX
+              value: "wp_"
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          volumeMounts:
+            - name: wordpress-pvc
+              mountPath: /var/www/html
+      restartPolicy: Always
+      volumes:
+        - name: wordpress-pvc
+          persistentVolumeClaim:
+            claimName: wordpress-pvc

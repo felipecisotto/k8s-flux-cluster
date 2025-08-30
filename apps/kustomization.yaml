@@ -10,3 +10,4 @@ resources:
   - financial
   - open-webui
   - redis
+  - wordpress
